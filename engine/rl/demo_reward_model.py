@@ -13,6 +13,7 @@ from rl.src.rl_models import AgentObservation, RewardComponents
 @dataclass
 class RewardSettings:
     """Configuration for reward function components."""
+
     tokens_held: tuple[bool, float] = (True, 0.1)  # (enabled, weight)
     cards_held: tuple[bool, float] = (True, 0.5)
     points: tuple[bool, float] = (True, 1.0)
@@ -106,7 +107,7 @@ def demonstrate_reward_scenarios():
 
     print(f'Previous state: {sum(prev_obs.gems)} gems, {prev_obs.points} pts')
     print(f'Current state:  {sum(obs.gems)} gems, {obs.points} pts')
-    print(f'Reward breakdown:')
+    print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
             print(f'  {key:20s}: {value:+.2f}')
@@ -134,7 +135,7 @@ def demonstrate_reward_scenarios():
 
     print(f'Previous state: {sum(prev_obs.gems)} gems, {sum(prev_obs.bonuses)} bonuses, {prev_obs.points} pts')
     print(f'Current state:  {sum(obs.gems)} gems, {sum(obs.bonuses)} bonuses, {obs.points} pts')
-    print(f'Reward breakdown:')
+    print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
             print(f'  {key:20s}: {value:+.2f}')
@@ -162,7 +163,7 @@ def demonstrate_reward_scenarios():
 
     print(f'Previous state: {prev_obs.points} pts (turn {prev_obs.turn_number})')
     print(f'Current state:  {obs.points} pts (turn {obs.turn_number}) - VICTORY!')
-    print(f'Reward breakdown:')
+    print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
             print(f'  {key:20s}: {value:+.2f}')
@@ -192,7 +193,7 @@ def demonstrate_reward_scenarios():
 
     print(f'Previous state: {prev_obs.points} pts, opponent {prev_obs.opponent_points} pts')
     print(f'Current state:  {obs.points} pts, opponent {obs.opponent_points} pts - DEFEAT!')
-    print(f'Reward breakdown:')
+    print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
             print(f'  {key:20s}: {value:+.2f}')
@@ -252,7 +253,7 @@ def demonstrate_reward_scenarios():
         reward_fn = SplendorRewardFunction(config)
         reward = reward_fn.calculate_reward(test_obs, test_prev, done=False)
         print(f'{config_name:25s}: Total reward = {reward.total:+6.2f}')
-        print(f'  Components: tokens={reward.tokens_held:+.2f}, cards={reward.cards_held:+.2f}, ' +
+        print(f'  Components: tokens={reward.tokens_held:+.2f}, cards={reward.cards_held:+.2f}, '
               f'points={reward.points_gained:+.2f}, win={reward.win_lose:+.2f}, length={reward.game_length_penalty:+.2f}')
         print()
 

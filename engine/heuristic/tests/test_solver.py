@@ -1,5 +1,4 @@
 import pytest
-
 from heuristic.src.solver import State
 
 

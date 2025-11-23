@@ -2,9 +2,8 @@ from collections.abc import Iterable
 from functools import cache, partial
 from itertools import chain, product
 
-from more_itertools import distinct_permutations
-
 from heuristic.src.color import COLOR_NUM, Color
+from more_itertools import distinct_permutations
 
 MAX_GEMS = 7
 

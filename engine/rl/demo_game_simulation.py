@@ -8,20 +8,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from heuristic.src.cardparser import get_deck
+
 from rl.src.rl_models import (
     Action,
+    ActionPatternAnalyzer,
     AgentObservation,
     AnalyzerOrchestrator,
-    ActionPatternAnalyzer,
     CardSynergyAnalyzer,
     EfficiencyAnalyzer,
-    RewardComponents,
     StrategicPositionAnalyzer,
     Transition,
     ValueFunctionAnalyzer,
 )
 
 deck = get_deck()
+
 
 def simulate_game_step(turn: int) -> tuple[AgentObservation, list[Transition]]:
     """Simulate a game state at a given turn."""
@@ -138,7 +139,7 @@ for turn in turns:
             analysis['strategic_position']['victory_probability']
         )
 
-    if 'action_pattern' in analysis and analysis['action_pattern']:
+    if analysis.get('action_pattern'):
         metrics_over_time['buy_to_take_ratio'].append(
             analysis['action_pattern'].get('buy_to_take_ratio', 0.0)
         )
@@ -220,7 +221,7 @@ if len(metrics_over_time['victory_probability']) > 1:
         metrics_over_time['victory_probability'][-1] -
         metrics_over_time['victory_probability'][0]
     )
-    print(f'• Win probability: {metrics_over_time["victory_probability"][-1]:.0%} ({"+{:.0%}".format(win_trend) if win_trend > 0 else "{:.0%}".format(win_trend)})')
+    print(f'• Win probability: {metrics_over_time["victory_probability"][-1]:.0%} ({f"+{win_trend:.0%}" if win_trend > 0 else f"{win_trend:.0%}"})')
 
 if len(metrics_over_time['buy_to_take_ratio']) > 1:
     avg_ratio = sum(metrics_over_time['buy_to_take_ratio']) / len(metrics_over_time['buy_to_take_ratio'])

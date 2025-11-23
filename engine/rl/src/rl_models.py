@@ -17,7 +17,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from heuristic.src.cardparser import Card
 from heuristic.src.gems import Gems
 
-
 # ============================================================================
 # Core Agent Data Structures
 # ============================================================================
@@ -69,10 +68,9 @@ class Action:
     def __str__(self) -> str:
         if self.action_type == 'buy':
             return f'Buy card {self.card_id}'
-        elif self.action_type == 'reserve':
+        if self.action_type == 'reserve':
             return f'Reserve card {self.card_id}'
-        else:
-            return f'Take gems {self.gem_pattern}'
+        return f'Take gems {self.gem_pattern}'
 
 
 @dataclass
@@ -475,10 +473,9 @@ class CardSynergyAnalyzer(StateAnalyzer):
 
         if concentration >= 0.6:
             return 'focused'
-        elif concentration >= 0.4:
+        if concentration >= 0.4:
             return 'balanced'
-        else:
-            return 'scattered'
+        return 'scattered'
 
     def _count_affordable_cards(self, obs: AgentObservation) -> int:
         """Count cards on board that are currently affordable."""
