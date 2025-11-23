@@ -19,6 +19,16 @@ The goal of the board game Splendor is to reach 15 points by either taking chips
    python splendor_fastest_win.py
    ```
 
+### Visualize a solution
+Render the sequence of states for a solved game directly in the terminal:
+
+```bash
+python -m src.ui 10 --use-heuristic
+```
+
+The command above prints every step needed to reach 10 points, including gems on hand,
+bonuses from purchased cards, and the cards themselves.
+
 ### How it works
 The tool uses breadth-first search to greedily check all possible move sequences. Optionally you can use a heuristic that limits search space of BFS by using only the most promising game states.
 
