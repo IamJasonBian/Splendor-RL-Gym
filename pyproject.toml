@@ -11,6 +11,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
+    "ruff>=0.8.4",
 ]
 
 [tool.ruff]
@@ -38,10 +39,22 @@ ignore = [
     "E731",    # lambda-assignment           (precludes a concise functional style)
     "PLC0415", # import-outside-top-level    (sometimes imports in a function are necessary)
     "PLR2004", # magic-value-comparison      (demands too many constants)
+    "PLR0915", # too-many-statements         (demo scripts can be long)
+    "PLR6301", # method-could-be-static      (keeping methods for clarity)
+    "TC002",   # typing-only-third-party-import (not worth the complexity)
+    "TC003",   # typing-only-standard-library-import (not worth the complexity)
+    "ARG002",  # unused-method-argument      (interface consistency)
+    "FBT001",  # boolean-positional-arg      (acceptable for simple cases)
+    "RUF002",  # ambiguous-unicode-character (allow Greek letters in docstrings)
+    "BLE001",  # blind-except                (acceptable in analyzer orchestrator)
+    "B007",    # unused-loop-control-variable (acceptable in comprehensions)
+    "INP001",  # implicit-namespace-package  (demos don't need strict packaging)
     "TD003",   # missing-todo-link           (too cumbersome)
     "G004",    # logging-f-string            (pointless micro-optimization in most cases)
     "DOC201",  # docstring-missing-returns   (excessive documentation)
     "DOC402",  # docstring-missing-yields    (excessive documentation)
+    "D401",    # docstring-imperative-mood   (overly restrictive)
+    "EXE001",  # shebang-not-executable      (not all scripts need to be executable)
 ]
 allowed-confusables = [
     "а", "б", "в", "г", "е", "з", "и", "к", "м", "н", "о", "р", "с", "у", "ф", "х",
@@ -57,3 +70,6 @@ convention = "pep257"
 [tool.ruff.lint.flake8-pytest-style]
 parametrize-names-type = "csv"
 parametrize-values-type = "tuple"
+
+[tool.ruff.lint.per-file-ignores]
+"engine/rl/demo_*.py" = ["E501"]  # Allow long lines in demo scripts

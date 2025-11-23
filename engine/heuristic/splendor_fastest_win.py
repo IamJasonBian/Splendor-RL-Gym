@@ -5,10 +5,10 @@
 import argparse
 import sys
 
-from src.buys import export_buys_to_txt, load_buys
-from src.color import Color
-from src.solver import HEURISTICS, GameConfig, MultiPlayerState, State
-from src.ui import render_solution
+from heuristic.src.buys import export_buys_to_txt, load_buys
+from heuristic.src.color import Color
+from heuristic.src.solver import HEURISTICS, GameConfig, MultiPlayerState, State
+from heuristic.src.ui import render_solution
 
 
 def cli():

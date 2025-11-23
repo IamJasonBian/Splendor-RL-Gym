@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.solver import CardMarket, GameConfig, GemPool, MultiPlayerState, PlayerState
+from heuristic.src.solver import CardMarket, GameConfig, GemPool, MultiPlayerState, PlayerState
 
 
 def test_game_config_defaults():

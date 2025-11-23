@@ -1,9 +1,9 @@
 """Terminal UI renderer for displaying Splendor game states."""
 
-from src.cardparser import get_deck
-from src.color import Color
-from src.gems import Gems
-from src.solver import State
+from heuristic.src.cardparser import get_deck
+from heuristic.src.color import Color
+from heuristic.src.gems import Gems
+from heuristic.src.solver import State
 
 deck = get_deck()
 

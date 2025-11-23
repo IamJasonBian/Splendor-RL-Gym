@@ -1,8 +1,7 @@
 from random import shuffle
 
 import pytest
-
-from src.cardparser import Card, Color, load_deck, sort_cards
+from heuristic.src.cardparser import Card, Color, load_deck, sort_cards
 
 # CSV header: White,Blue,Green,Red,Black,Pt,Bonus
 samples = (

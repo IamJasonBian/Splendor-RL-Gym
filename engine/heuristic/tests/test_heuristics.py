@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.solver import (
+from heuristic.src.solver import (
     HEURISTICS,
     State,
     aggressive_heuristic,

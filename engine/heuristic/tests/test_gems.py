@@ -1,5 +1,5 @@
-from src.color import COLOR_NUM, Color
-from src.gems import (
+from heuristic.src.color import COLOR_NUM, Color
+from heuristic.src.gems import (
     MAX_GEMS,
     get_takes,
     increase_bonus,

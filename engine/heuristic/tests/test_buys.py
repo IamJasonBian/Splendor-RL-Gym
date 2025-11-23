@@ -1,7 +1,7 @@
-from src.buys import BUYS_PATH, load_buys, possible_buys, store_buys
-from src.cardparser import get_deck
-from src.color import COLOR_NUM
-from src.gems import MAX_GEMS
+from heuristic.src.buys import BUYS_PATH, load_buys, possible_buys, store_buys
+from heuristic.src.cardparser import get_deck
+from heuristic.src.color import COLOR_NUM
+from heuristic.src.gems import MAX_GEMS
 
 buys = possible_buys()
 
