@@ -28,19 +28,19 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv sync
+        uv sync --all-groups
 
     - name: Run linter (ruff)
       run: |
-        uv run ruff check .
+        uv run --group dev ruff check .
 
     - name: Run formatter check (ruff)
       run: |
-        uv run ruff format --check .
+        uv run --group dev ruff format --check .
 
     - name: Run tests
       run: |
-        uv run pytest tests/ -v
+        uv run --group dev pytest tests/ -v
 
     - name: Run visualization demos
       run: |
