@@ -69,27 +69,39 @@ def simulate_game_step(turn: int) -> tuple[AgentObservation, list[Transition]]:
     # Simulate history with varied actions
     history = []
     for t in range(max(0, turn - 5), turn):
-        action_type = random.choice(['buy', 'buy', 'take_gems', 'take_gems', 'take_gems'])
+        action_type = random.choice([
+            'buy',
+            'buy',
+            'take_gems',
+            'take_gems',
+            'take_gems',
+        ])
         if action_type == 'buy':
             action = Action(action_type='buy', card_id=random.randint(0, 89))
             reward = random.uniform(2.0, 5.0)
         else:
-            action = Action(action_type='take_gems', gem_pattern=(1, 1, 1, 0, 0))
+            action = Action(
+                action_type='take_gems', gem_pattern=(1, 1, 1, 0, 0)
+            )
             reward = random.uniform(0.3, 0.8)
 
-        history.append(Transition(
-            observation=obs,
-            action=action,
-            reward=reward,
-            next_observation=obs,
-            done=False,
-            info={'value_estimate': random.uniform(8.0, 15.0)},
-        ))
+        history.append(
+            Transition(
+                observation=obs,
+                action=action,
+                reward=reward,
+                next_observation=obs,
+                done=False,
+                info={'value_estimate': random.uniform(8.0, 15.0)},
+            )
+        )
 
     return obs, history
 
 
-def print_progress_bar(current: int, total: int, label: str = '', width: int = 30):
+def print_progress_bar(
+    current: int, total: int, label: str = '', width: int = 30
+):
     """Print a simple progress bar."""
     filled = int(width * current / total)
     bar = '█' * filled + '░' * (width - filled)
@@ -151,7 +163,9 @@ for turn in turns:
 
     # Display turn summary
     print(f'Turn {turn:2d}:')
-    print(f'  Points: {obs.points:2d}/15  |  Gems: {sum(obs.gems):2d}  |  Bonuses: {sum(obs.bonuses):2d}  |  Cards: {len(obs.cards_owned):2d}')
+    print(
+        f'  Points: {obs.points:2d}/15  |  Gems: {sum(obs.gems):2d}  |  Bonuses: {sum(obs.bonuses):2d}  |  Cards: {len(obs.cards_owned):2d}'
+    )
 
     if 'strategic_position' in analysis:
         win_prob = analysis['strategic_position']['victory_probability']
@@ -211,21 +225,33 @@ print('=' * 70)
 # Calculate trends
 if len(metrics_over_time['points_per_turn']) > 1:
     ppt_trend = (
-        metrics_over_time['points_per_turn'][-1] -
-        metrics_over_time['points_per_turn'][0]
+        metrics_over_time['points_per_turn'][-1]
+        - metrics_over_time['points_per_turn'][0]
     )
-    print(f'• Points/turn trend: {"+Improving" if ppt_trend > 0 else "Declining"}')
+    print(
+        f'• Points/turn trend: {"+Improving" if ppt_trend > 0 else "Declining"}'
+    )
 
 if len(metrics_over_time['victory_probability']) > 1:
     win_trend = (
-        metrics_over_time['victory_probability'][-1] -
-        metrics_over_time['victory_probability'][0]
+        metrics_over_time['victory_probability'][-1]
+        - metrics_over_time['victory_probability'][0]
     )
-    print(f'• Win probability: {metrics_over_time["victory_probability"][-1]:.0%} ({f"+{win_trend:.0%}" if win_trend > 0 else f"{win_trend:.0%}"})')
+    print(
+        f'• Win probability: {metrics_over_time["victory_probability"][-1]:.0%} ({f"+{win_trend:.0%}" if win_trend > 0 else f"{win_trend:.0%}"})'
+    )
 
 if len(metrics_over_time['buy_to_take_ratio']) > 1:
-    avg_ratio = sum(metrics_over_time['buy_to_take_ratio']) / len(metrics_over_time['buy_to_take_ratio'])
-    strategy = 'Aggressive (buy-heavy)' if avg_ratio > 1.0 else 'Balanced' if avg_ratio > 0.5 else 'Conservative (gem-collection heavy)'
+    avg_ratio = sum(metrics_over_time['buy_to_take_ratio']) / len(
+        metrics_over_time['buy_to_take_ratio']
+    )
+    strategy = (
+        'Aggressive (buy-heavy)'
+        if avg_ratio > 1.0
+        else 'Balanced'
+        if avg_ratio > 0.5
+        else 'Conservative (gem-collection heavy)'
+    )
     print(f'• Strategy: {strategy} (avg ratio: {avg_ratio:.2f})')
 
 print()

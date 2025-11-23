@@ -133,8 +133,12 @@ def demonstrate_reward_scenarios():
 
     reward = reward_fn.calculate_reward(obs, prev_obs, done=False)
 
-    print(f'Previous state: {sum(prev_obs.gems)} gems, {sum(prev_obs.bonuses)} bonuses, {prev_obs.points} pts')
-    print(f'Current state:  {sum(obs.gems)} gems, {sum(obs.bonuses)} bonuses, {obs.points} pts')
+    print(
+        f'Previous state: {sum(prev_obs.gems)} gems, {sum(prev_obs.bonuses)} bonuses, {prev_obs.points} pts'
+    )
+    print(
+        f'Current state:  {sum(obs.gems)} gems, {sum(obs.bonuses)} bonuses, {obs.points} pts'
+    )
     print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
@@ -161,8 +165,12 @@ def demonstrate_reward_scenarios():
 
     reward = reward_fn.calculate_reward(obs, prev_obs, done=True, winner=0)
 
-    print(f'Previous state: {prev_obs.points} pts (turn {prev_obs.turn_number})')
-    print(f'Current state:  {obs.points} pts (turn {obs.turn_number}) - VICTORY!')
+    print(
+        f'Previous state: {prev_obs.points} pts (turn {prev_obs.turn_number})'
+    )
+    print(
+        f'Current state:  {obs.points} pts (turn {obs.turn_number}) - VICTORY!'
+    )
     print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
@@ -191,8 +199,12 @@ def demonstrate_reward_scenarios():
 
     reward = reward_fn.calculate_reward(obs, prev_obs, done=True, winner=1)
 
-    print(f'Previous state: {prev_obs.points} pts, opponent {prev_obs.opponent_points} pts')
-    print(f'Current state:  {obs.points} pts, opponent {obs.opponent_points} pts - DEFEAT!')
+    print(
+        f'Previous state: {prev_obs.points} pts, opponent {prev_obs.opponent_points} pts'
+    )
+    print(
+        f'Current state:  {obs.points} pts, opponent {obs.opponent_points} pts - DEFEAT!'
+    )
     print('Reward breakdown:')
     for key, value in reward.to_dict().items():
         if key != 'total':
@@ -253,8 +265,10 @@ def demonstrate_reward_scenarios():
         reward_fn = SplendorRewardFunction(config)
         reward = reward_fn.calculate_reward(test_obs, test_prev, done=False)
         print(f'{config_name:25s}: Total reward = {reward.total:+6.2f}')
-        print(f'  Components: tokens={reward.tokens_held:+.2f}, cards={reward.cards_held:+.2f}, '
-              f'points={reward.points_gained:+.2f}, win={reward.win_lose:+.2f}, length={reward.game_length_penalty:+.2f}')
+        print(
+            f'  Components: tokens={reward.tokens_held:+.2f}, cards={reward.cards_held:+.2f}, '
+            f'points={reward.points_gained:+.2f}, win={reward.win_lose:+.2f}, length={reward.game_length_penalty:+.2f}'
+        )
         print()
 
 

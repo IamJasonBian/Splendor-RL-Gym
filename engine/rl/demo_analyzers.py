@@ -24,7 +24,9 @@ from rl.src.rl_models import (
 # Load the deck
 deck = get_deck()
 print(f'Loaded {len(deck)} cards from deck')
-print(f'Sample card: {deck[0]} - Cost: {deck[0].cost}, Points: {deck[0].pt}, Bonus: {deck[0].bonus}')
+print(
+    f'Sample card: {deck[0]} - Cost: {deck[0].cost}, Points: {deck[0].pt}, Bonus: {deck[0].bonus}'
+)
 print()
 
 # Create a simulated mid-game state

@@ -383,9 +383,7 @@ class ValueFunctionAnalyzer(StateAnalyzer):
 
         # Look at last completed episode to evaluate value predictions
         returns = self._calculate_discounted_returns(history, gamma=0.99)
-        predicted_values = [
-            t.info.get('value_estimate', 0.0) for t in history
-        ]
+        predicted_values = [t.info.get('value_estimate', 0.0) for t in history]
 
         return {
             'value_prediction_error': self._mean_absolute_error(
@@ -419,9 +417,8 @@ class ValueFunctionAnalyzer(StateAnalyzer):
     ) -> float:
         if not predictions or len(predictions) != len(targets):
             return 0.0
-        return (
-            sum(abs(p - t) for p, t in zip(predictions, targets))
-            / len(predictions)
+        return sum(abs(p - t) for p, t in zip(predictions, targets)) / len(
+            predictions
         )
 
 
@@ -524,21 +521,21 @@ class AnalyzerOrchestrator:
         if 'efficiency' in analysis:
             eff = analysis['efficiency']
             summary_parts.append(
-                f"Efficiency: {eff['points_per_turn']:.2f} pts/turn"
+                f'Efficiency: {eff["points_per_turn"]:.2f} pts/turn'
             )
 
         # Position
         if 'strategic_position' in analysis:
             pos = analysis['strategic_position']
             summary_parts.append(
-                f"Win Probability: {pos['victory_probability']:.0%}"
+                f'Win Probability: {pos["victory_probability"]:.0%}'
             )
 
         # Action patterns
         if 'action_pattern' in analysis:
             act = analysis['action_pattern']
             summary_parts.append(
-                f"Strategy: {act['buy_to_take_ratio']:.1f} buy/take ratio"
+                f'Strategy: {act["buy_to_take_ratio"]:.1f} buy/take ratio'
             )
 
         return ' | '.join(summary_parts)
