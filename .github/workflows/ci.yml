@@ -40,10 +40,12 @@ jobs:
 
     - name: Run tests (heuristic engine)
       run: |
+        export PYTHONPATH="${PYTHONPATH}:${PWD}/engine"
         uv run pytest engine/heuristic/tests/ -v
 
     - name: Run visualization demos (RL engine)
       run: |
+        export PYTHONPATH="${PYTHONPATH}:${PWD}/engine"
         echo "Running analyzer demo..."
         cd engine/rl && uv run python demo_analyzers.py
         echo "Running game simulation demo..."
@@ -53,6 +55,7 @@ jobs:
 
     - name: Verify visualization architecture
       run: |
+        export PYTHONPATH="${PYTHONPATH}:${PWD}/engine"
         echo "Checking visualization components..."
         cd engine && uv run python -c "from rl.src.rl_models import EfficiencyAnalyzer, StrategicPositionAnalyzer, ActionPatternAnalyzer, ValueFunctionAnalyzer, CardSynergyAnalyzer, AnalyzerOrchestrator; print('All analyzers imported successfully')"
         echo "Verification complete!"
