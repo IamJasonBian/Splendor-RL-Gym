@@ -1,7 +1,13 @@
 """Demo of the reward function based on SplendorSimulator's approach."""
 
+import sys
 from dataclasses import dataclass
-from src.rl_models import AgentObservation, RewardComponents
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from rl.src.rl_models import AgentObservation, RewardComponents
 
 
 @dataclass

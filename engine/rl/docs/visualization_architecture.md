@@ -295,7 +295,7 @@ class VisualizationEvent:
 │  │  (InfluxDB)      │  │  (Spark/Flink)   │  │  (Grafana/   │ │
 │  │                  │  │                  │  │   Custom)    │ │
 │  │ - Win rate       │  │ - Compute stats  │  │              │ │
-│  │ - Avg reward     │  │ - Detect         │  │  📊 📈 📉   │ │
+│  │ - Avg reward     │  │ - Detect         │  │  Dashboards  │ │
 │  │ - Policy loss    │  │   anomalies      │  │              │ │
 │  └──────────────────┘  └──────────────────┘  └──────────────┘ │
 │                                                                 │
@@ -874,7 +874,7 @@ Episode Length Distribution              Reward Components
 └─────────────────────────────┘
 
 Recent Checkpoints:
-• v52 @ 50000 steps - Win rate: 72% (ELO: 1450) ⭐ Best
+• v52 @ 50000 steps - Win rate: 72% (ELO: 1450) <- Best
 • v51 @ 49000 steps - Win rate: 68% (ELO: 1420)
 • v50 @ 48000 steps - Win rate: 65% (ELO: 1390)
 ```

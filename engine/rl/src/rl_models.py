@@ -3,14 +3,19 @@
 from __future__ import annotations
 
 import math
+import sys
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Literal
 
-from src.cardparser import Card
-from src.gems import Gems
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from heuristic.src.cardparser import Card
+from heuristic.src.gems import Gems
 
 
 # ============================================================================

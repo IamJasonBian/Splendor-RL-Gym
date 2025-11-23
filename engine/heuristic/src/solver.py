@@ -1,10 +1,10 @@
 from bisect import insort
 from random import randint
 
-from src.buys import get_buys
-from src.cardparser import CardIndices, get_deck
-from src.color import COLOR_NUM
-from src.gems import (
+from heuristic.src.buys import get_buys
+from heuristic.src.cardparser import CardIndices, get_deck
+from heuristic.src.color import COLOR_NUM
+from heuristic.src.gems import (
     MAX_GEMS,
     Gems,
     get_takes,

@@ -1,7 +1,13 @@
 """Demo script to test the state analyzers with simulated game data."""
 
-from src.cardparser import get_deck
-from src.rl_models import (
+import sys
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from heuristic.src.cardparser import get_deck
+from rl.src.rl_models import (
     Action,
     AgentObservation,
     AnalyzerOrchestrator,

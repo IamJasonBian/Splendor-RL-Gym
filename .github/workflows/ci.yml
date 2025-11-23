@@ -32,27 +32,27 @@ jobs:
 
     - name: Run linter (ruff)
       run: |
-        uv run --group dev ruff check .
+        uv run ruff check .
 
     - name: Run formatter check (ruff)
       run: |
-        uv run --group dev ruff format --check .
+        uv run ruff format --check .
 
-    - name: Run tests
+    - name: Run tests (heuristic engine)
       run: |
-        uv run --group dev pytest tests/ -v
+        uv run pytest engine/heuristic/tests/ -v
 
-    - name: Run visualization demos
+    - name: Run visualization demos (RL engine)
       run: |
         echo "Running analyzer demo..."
-        uv run python demo_analyzers.py
+        cd engine/rl && uv run python demo_analyzers.py
         echo "Running game simulation demo..."
-        uv run python demo_game_simulation.py
+        cd engine/rl && uv run python demo_game_simulation.py
         echo "Running reward model demo..."
-        uv run python demo_reward_model.py
+        cd engine/rl && uv run python demo_reward_model.py
 
     - name: Verify visualization architecture
       run: |
         echo "Checking visualization components..."
-        uv run python -c "from src.rl_models import EfficiencyAnalyzer, StrategicPositionAnalyzer, ActionPatternAnalyzer, ValueFunctionAnalyzer, CardSynergyAnalyzer, AnalyzerOrchestrator; print('All analyzers imported successfully')"
+        cd engine && uv run python -c "from rl.src.rl_models import EfficiencyAnalyzer, StrategicPositionAnalyzer, ActionPatternAnalyzer, ValueFunctionAnalyzer, CardSynergyAnalyzer, AnalyzerOrchestrator; print('All analyzers imported successfully')"
         echo "Verification complete!"

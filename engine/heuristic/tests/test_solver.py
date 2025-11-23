@@ -1,6 +1,6 @@
 import pytest
 
-from src.solver import State
+from heuristic.src.solver import State
 
 
 @pytest.fixture

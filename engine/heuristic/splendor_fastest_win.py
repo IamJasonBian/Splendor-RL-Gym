@@ -5,9 +5,9 @@
 import argparse
 import sys
 
-from src.buys import export_buys_to_txt, load_buys
-from src.color import Color
-from src.solver import State
+from heuristic.src.buys import export_buys_to_txt, load_buys
+from heuristic.src.color import Color
+from heuristic.src.solver import State
 
 
 def cli():

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from functools import cache, cached_property
 from pathlib import Path
 
-from src.color import Color
-from src.gems import Gems
+from heuristic.src.color import Color
+from heuristic.src.gems import Gems
 
 CardIndex = int
 CardIndices = tuple[CardIndex, ...]
