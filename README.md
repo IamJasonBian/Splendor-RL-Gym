@@ -124,7 +124,7 @@ In addition to the speedrun mode (which assumes infinite gems and all cards visi
 - **Gem Pool Constraints**: Limited gem availability (4 per color for 2-player)
 - **Card Visibility**: Only 12 cards visible at a time (4 per tier)
 - **Turn-Based Play**: Players alternate turns
-- **Competitive Strategy**: Heuristic considers opponent state
+- **Player Strategies**: Configure different playstyles (balanced, aggressive, defensive)
 
 **Usage:**
 ```bash
@@ -136,6 +136,26 @@ python splendor_fastest_win.py 15 --realistic --shuffle -w 20000 -q
 
 # 3-player realistic game (uses 5 gems per color)
 python splendor_fastest_win.py 12 --realistic --players 3 -w 15000 -q
+
+# Aggressive vs defensive player matchup
+python splendor_fastest_win.py 6 --realistic -w 5000 --strategies "aggressive,defensive" -q
+
+# 3-player game with mixed strategies
+python splendor_fastest_win.py 10 --realistic --players 3 --strategies "balanced,aggressive,defensive" -q
+```
+
+**Player Strategies:**
+
+The realistic mode supports three distinct player strategies:
+
+1. **Balanced** (default) - Plays to win efficiently, balances point-scoring with resource management
+2. **Aggressive** - Actively blocks opponents, prioritizes denying cards to the leader
+3. **Defensive** - Plays conservatively, builds engine (bonuses) early, minimizes vulnerability
+
+Use `--strategies` to configure each player's strategy as a comma-separated list:
+```bash
+--strategies "balanced,aggressive"  # P0=balanced, P1=aggressive
+--strategies "defensive,defensive"  # Both players play defensively
 ```
 
 **Performance Notes:**
@@ -148,15 +168,29 @@ python splendor_fastest_win.py 12 --realistic --players 3 -w 15000 -q
 **Output Example:**
 ```
 ============================================================
+REALISTIC MODE SOLVER
+============================================================
+Target Points: 6
+Number of Players: 2
+Player Strategies: P0=aggressive, P1=defensive
+Gems per Color: 4
+Beam Width: 5,000
+Card Visibility: 12 cards (4 per tier)
+Market Shuffled: Yes
+============================================================
+
+...
+
+============================================================
 Game Over! Winner: Player 0
 Final Scores:
-  Player 0: 6 points, 7 cards
-  Player 1: 6 points, 8 cards
-Total moves: 32
+  Player 0 (aggressive): 8 points, 15 cards
+  Player 1 (defensive): 6 points, 17 cards
+Total moves: 47
 ============================================================
 ```
 
-The solver finds competitive play where both players race to the target, with the winner determined by points (tiebreaker: fewer cards).
+The solver simulates competitive gameplay where players use different strategies, with outcomes depending on strategy matchups and first-player advantage.
 
 ### Mode Comparison
 
