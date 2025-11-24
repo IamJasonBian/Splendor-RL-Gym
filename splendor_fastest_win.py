@@ -81,6 +81,12 @@ def cli():
         help='shuffle card market in realistic mode',
         action='store_true',
     )
+    parser.add_argument(
+        '--strategies',
+        help='player strategies for realistic mode (e.g., "balanced,aggressive" or "defensive,balanced")',
+        type=str,
+        default=None,
+    )
     if len(sys.argv) == 1:  # no arguments given
         parser.print_help()
         parser.exit()
@@ -95,11 +101,29 @@ def cli():
             if args.realistic:
                 # Realistic multi-player mode
                 gems_per_color = {2: 4, 3: 5, 4: 7}.get(args.players, 4)
+
+                # Parse player strategies
+                if args.strategies:
+                    strategies = tuple(s.strip() for s in args.strategies.split(','))
+                    if len(strategies) != args.players:
+                        print(f'Error: Number of strategies ({len(strategies)}) must match number of players ({args.players})')
+                        return
+                    # Validate strategies
+                    valid_strategies = {'balanced', 'aggressive', 'defensive'}
+                    for s in strategies:
+                        if s not in valid_strategies:
+                            print(f'Error: Invalid strategy "{s}". Must be one of: {", ".join(valid_strategies)}')
+                            return
+                else:
+                    # Default: all balanced
+                    strategies = tuple('balanced' for _ in range(args.players))
+
                 config = GameConfig(
                     num_players=args.players,
                     target_points=args.goal_pts,
                     gems_per_color=gems_per_color,
                     infinite_resources=False,
+                    player_strategies=strategies,
                 )
                 solution = MultiPlayerState.newgame(
                     config=config,
@@ -117,7 +141,8 @@ def cli():
                     print(f'Game Over! Winner: Player {winner_id}')
                     print(f'Final Scores:')
                     for p in solution[-1].players:
-                        print(f'  Player {p.player_id}: {p.pts} points, {len(p.cards)} cards')
+                        strategy = strategies[p.player_id]
+                        print(f'  Player {p.player_id} ({strategy}): {p.pts} points, {len(p.cards)} cards')
                     print(f'Total moves: {solution[-1].turn_number}')
                     print(f'{"="*60}\n')
 

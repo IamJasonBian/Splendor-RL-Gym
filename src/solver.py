@@ -31,6 +31,7 @@ class GameConfig:
     gems_per_color: int = 4  # 4 for 2p, 5 for 3p, 7 for 4p
     cards_visible_per_tier: int = 4
     infinite_resources: bool = True  # Speedrun mode toggle
+    player_strategies: tuple[str, ...] = ('balanced', 'balanced')  # Strategy per player
 
 
 @dataclass(frozen=True)
@@ -763,8 +764,8 @@ class MultiPlayerState:
             print('='*60)
             print(f'Target Points: {self.config.target_points}')
             print(f'Number of Players: {self.config.num_players}')
+            print(f'Player Strategies: {", ".join(f"P{i}={s}" for i, s in enumerate(self.config.player_strategies))}')
             print(f'Gems per Color: {self.config.gems_per_color}')
-            print(f'Heuristic: {heuristic_name}')
             print(f'Beam Width: {beam_width:,}')
             print(f'Card Visibility: 12 cards (4 per tier)')
             print(f'Market Shuffled: {"Yes" if self.market.tier1_deck != self.market.tier1_deck[:1] else "No (deterministic)"}')
@@ -774,14 +775,12 @@ class MultiPlayerState:
         queue: list[MultiPlayerState] = [self]
         trail: dict[MultiPlayerState, MultiPlayerState | None] = {self: None}
 
-        # Define competitive heuristic for multi-player games
-        def multi_competitive_heuristic(state: MultiPlayerState) -> float:
-            """Competitive heuristic for 2-player games."""
-            # Score from perspective of player whose turn just ended
-            # (the one who just made this state)
+        # Define heuristic strategies for multi-player games
+        def multi_balanced_heuristic(state: MultiPlayerState) -> float:
+            """Balanced competitive strategy - plays to win efficiently."""
             prev_player_idx = (state.current_player - 1) % state.config.num_players
             me = state.players[prev_player_idx]
-            opp = state.players[state.current_player]  # Next player (opponent)
+            opp = state.players[state.current_player]
 
             # Point differential (most important)
             point_diff = (me.pts - opp.pts) ** 2.5 if me.pts > opp.pts else -(opp.pts - me.pts) ** 2.5
@@ -791,7 +790,7 @@ class MultiPlayerState:
             opp_resources = sum(opp.gems) + sum(opp.bonus) * 2
             resource_diff = (my_resources - opp_resources) ** 0.5 if my_resources > opp_resources else 0
 
-            # Market control (how many visible cards can I afford vs opponent)
+            # Market control
             my_affordable = sum(
                 1 for card_idx in state.market.all_visible_cards()
                 if me.can_afford(card_idx)
@@ -806,12 +805,127 @@ class MultiPlayerState:
             my_diversity = sum(1 for b in me.bonus if b > 0)
             diversity_score = my_diversity ** 0.5
 
-            # Random tiebreaker
             noise = randint(1, 100) * 0.01
 
             return point_diff * 100 + resource_diff * 20 + market_control + diversity_score * 3 + noise
 
-        heuristic = multi_competitive_heuristic
+        def multi_aggressive_heuristic(state: MultiPlayerState) -> float:
+            """Aggressive strategy - actively blocks opponent and denies cards."""
+            prev_player_idx = (state.current_player - 1) % state.config.num_players
+            me = state.players[prev_player_idx]
+
+            # Find the leading opponent
+            opponents = [p for p in state.players if p.player_id != me.player_id]
+            leader = max(opponents, key=lambda p: p.pts)
+
+            # Heavy emphasis on blocking the leader
+            point_diff = (me.pts - leader.pts) ** 2.5 if me.pts > leader.pts else -(leader.pts - me.pts) ** 2.5
+
+            # Deny cards opponent wants (cards they can afford)
+            leader_affordable = [
+                card_idx for card_idx in state.market.all_visible_cards()
+                if leader.can_afford(card_idx)
+            ]
+
+            # Bonus for buying cards opponent wants
+            denial_bonus = 0
+            if me.cards:
+                last_card = me.cards[-1]
+                if last_card in leader_affordable:
+                    denial_bonus = 50  # Big bonus for denying a card
+
+            # Market control - prefer states where opponent has fewer options
+            opp_options = len(leader_affordable)
+            deny_score = (10 - opp_options) ** 2  # Fewer opponent options = higher score
+
+            # Card value to opponent (high point cards they can afford)
+            high_value_denial = sum(
+                deck[card_idx].pt * 10
+                for card_idx in leader_affordable
+                if card_idx in me.cards
+            )
+
+            # Resource advantage
+            my_resources = sum(me.gems) + sum(me.bonus) * 2
+            opp_resources = sum(leader.gems) + sum(leader.bonus) * 2
+            resource_diff = (my_resources - opp_resources) ** 0.5 if my_resources > opp_resources else 0
+
+            noise = randint(1, 100) * 0.01
+
+            return (
+                point_diff * 80 +  # Still important but less than balanced
+                denial_bonus +
+                deny_score * 8 +
+                high_value_denial +
+                resource_diff * 15 +
+                noise
+            )
+
+        def multi_defensive_heuristic(state: MultiPlayerState) -> float:
+            """Defensive strategy - plays safe, minimizes vulnerability."""
+            prev_player_idx = (state.current_player - 1) % state.config.num_players
+            me = state.players[prev_player_idx]
+
+            # Find all opponents
+            opponents = [p for p in state.players if p.player_id != me.player_id]
+
+            # Point differential - but more conservative
+            max_opp_pts = max(p.pts for p in opponents)
+            point_diff = (me.pts - max_opp_pts) ** 2.0 if me.pts > max_opp_pts else -(max_opp_pts - me.pts) ** 2.5
+
+            # Strong emphasis on building engine (bonuses)
+            my_bonus_total = sum(me.bonus)
+            bonus_engine = my_bonus_total ** 1.5
+
+            # Prefer having many affordable cards (flexibility)
+            my_affordable = sum(
+                1 for card_idx in state.market.all_visible_cards()
+                if me.can_afford(card_idx)
+            )
+            flexibility_score = my_affordable ** 1.2
+
+            # Prefer diverse bonuses (less vulnerable to blocking)
+            my_diversity = sum(1 for b in me.bonus if b > 0)
+            diversity_score = my_diversity ** 1.5
+
+            # Resource cushion (prefer having more gems)
+            gem_cushion = sum(me.gems) ** 0.7
+
+            # Efficiency (more points per card)
+            efficiency = (me.pts / max(len(me.cards), 1)) ** 1.5
+
+            # Penalty for being too far behind
+            behind_penalty = 0
+            if max_opp_pts > me.pts + 3:
+                behind_penalty = -(max_opp_pts - me.pts) * 20
+
+            noise = randint(1, 100) * 0.01
+
+            return (
+                point_diff * 60 +  # Less aggressive point chasing
+                bonus_engine * 15 +  # Build engine
+                flexibility_score * 8 +
+                diversity_score * 10 +
+                gem_cushion * 5 +
+                efficiency * 12 +
+                behind_penalty +
+                noise
+            )
+
+        # Select heuristic based on current player's strategy
+        def get_player_heuristic(state: MultiPlayerState) -> float:
+            """Route to appropriate heuristic based on player strategy."""
+            prev_player_idx = (state.current_player - 1) % state.config.num_players
+            strategy = state.config.player_strategies[prev_player_idx]
+
+            if strategy == 'aggressive':
+                return multi_aggressive_heuristic(state)
+            elif strategy == 'defensive':
+                return multi_defensive_heuristic(state)
+            else:  # 'balanced' or 'competitive' (legacy)
+                return multi_balanced_heuristic(state)
+
+        heuristic = get_player_heuristic
 
         puzzle = self
         turn = 0
