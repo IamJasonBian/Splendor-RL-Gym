@@ -1,7 +1,6 @@
 """Tests for heuristic functions."""
 
 import pytest
-
 from heuristic.src.solver import (
     HEURISTICS,
     State,

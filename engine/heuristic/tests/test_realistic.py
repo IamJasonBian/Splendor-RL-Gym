@@ -1,8 +1,13 @@
 """Tests for realistic multi-player mode."""
 
-import pytest
 
-from heuristic.src.solver import CardMarket, GameConfig, GemPool, MultiPlayerState, PlayerState
+from heuristic.src.solver import (
+    CardMarket,
+    GameConfig,
+    GemPool,
+    MultiPlayerState,
+    PlayerState,
+)
 
 
 def test_game_config_defaults():

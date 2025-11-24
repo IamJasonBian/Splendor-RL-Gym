@@ -1,6 +1,5 @@
 """Tests for the UI rendering module."""
 
-from heuristic.src.color import Color
 from heuristic.src.solver import State
 from heuristic.src.ui import format_cards, format_gems, format_state
 

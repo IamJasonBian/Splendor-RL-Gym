@@ -136,7 +136,7 @@ class CardMarket:
                 tier2_deck=self.tier2_deck,
                 tier3_deck=self.tier3_deck,
             )
-        elif card_idx in self.tier2_visible:
+        if card_idx in self.tier2_visible:
             visible = list(self.tier2_visible)
             deck_remaining = self.tier2_deck
             visible.remove(card_idx)
@@ -151,7 +151,7 @@ class CardMarket:
                 tier2_deck=deck_remaining,
                 tier3_deck=self.tier3_deck,
             )
-        elif card_idx in self.tier3_visible:
+        if card_idx in self.tier3_visible:
             visible = list(self.tier3_visible)
             deck_remaining = self.tier3_deck
             visible.remove(card_idx)
@@ -530,9 +530,8 @@ class MultiPlayerState:
         if not self.final_round_triggered:
             # Check if any player reached target
             return any(p.pts >= self.config.target_points for p in self.players)
-        else:
-            # Final round: game ends when we return to the player who triggered it
-            return self.current_player == self.final_round_player
+        # Final round: game ends when we return to the player who triggered it
+        return self.current_player == self.final_round_player
 
     def get_winner(self) -> int | None:
         """Return winning player ID or None if tied/ongoing."""
@@ -653,7 +652,7 @@ class MultiPlayerState:
 
         # Generate all possible 3-different gem takes
         available_colors = [i for i in range(COLOR_NUM) if self.gem_pool.available[i] > 0]
-        
+
         for color_combo in combinations(available_colors, 3):
             if current.total_gem_count() + 3 > 10:
                 continue  # Would exceed hand limit

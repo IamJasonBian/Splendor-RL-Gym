@@ -7,7 +7,12 @@ import sys
 
 from heuristic.src.buys import export_buys_to_txt, load_buys
 from heuristic.src.color import Color
-from heuristic.src.solver import HEURISTICS, GameConfig, MultiPlayerState, State
+from heuristic.src.solver import (
+    HEURISTICS,
+    GameConfig,
+    MultiPlayerState,
+    State,
+)
 from heuristic.src.ui import render_solution
 
 
@@ -113,13 +118,13 @@ def cli():
                 # Print solution
                 if solution:
                     winner_id = solution[-1].get_winner()
-                    print(f'\n{"="*60}')
+                    print(f'\n{"=" * 60}')
                     print(f'Game Over! Winner: Player {winner_id}')
-                    print(f'Final Scores:')
+                    print('Final Scores:')
                     for p in solution[-1].players:
                         print(f'  Player {p.player_id}: {p.pts} points, {len(p.cards)} cards')
                     print(f'Total moves: {solution[-1].turn_number}')
-                    print(f'{"="*60}\n')
+                    print(f'{"=" * 60}\n')
 
                     if args.render:
                         print('Move-by-move breakdown:')

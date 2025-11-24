@@ -64,14 +64,14 @@ def render_solution(solution: list[State]) -> None:
     Args:
         solution: List of states representing the solution path
     """
-    print('\n' + '='*60)
+    print('\n' + '=' * 60)
     print('SOLUTION PATH')
-    print('='*60)
+    print('=' * 60)
 
     for step, state in enumerate(solution):
         print(format_state(state, step))
 
     final_state = solution[-1]
-    print('\n' + '='*60)
-    print(f'FINAL: {final_state.pts} points in {len(solution)-1} moves')
-    print('='*60)
+    print('\n' + '=' * 60)
+    print(f'FINAL: {final_state.pts} points in {len(solution) - 1} moves')
+    print('=' * 60)
