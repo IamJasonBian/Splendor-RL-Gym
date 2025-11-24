@@ -408,6 +408,20 @@ class State:
         Returns:
             List of states representing the solution path
         """
+        # Print configuration
+        if verbose:
+            print('='*60)
+            print('SPEEDRUN MODE SOLVER')
+            print('='*60)
+            print(f'Target Points: {goal_pts}')
+            print(f'Heuristic: {heuristic_name if use_heuristic else "None (pure BFS)"}')
+            if use_heuristic:
+                print(f'Beam Width: {beam_width:,}')
+            print(f'Gem Pool: Infinite')
+            print(f'Card Visibility: All 90 cards')
+            print('='*60)
+            print()
+
         queue: list[State] = [self]
         trail: dict[State, State | None] = {self: None}
 
@@ -742,6 +756,21 @@ class MultiPlayerState:
         verbose: bool = True,
     ) -> list['MultiPlayerState']:
         """Solve multi-player game using BFS with heuristic search."""
+        # Print configuration
+        if verbose:
+            print('='*60)
+            print('REALISTIC MODE SOLVER')
+            print('='*60)
+            print(f'Target Points: {self.config.target_points}')
+            print(f'Number of Players: {self.config.num_players}')
+            print(f'Gems per Color: {self.config.gems_per_color}')
+            print(f'Heuristic: {heuristic_name}')
+            print(f'Beam Width: {beam_width:,}')
+            print(f'Card Visibility: 12 cards (4 per tier)')
+            print(f'Market Shuffled: {"Yes" if self.market.tier1_deck != self.market.tier1_deck[:1] else "No (deterministic)"}')
+            print('='*60)
+            print()
+
         queue: list[MultiPlayerState] = [self]
         trail: dict[MultiPlayerState, MultiPlayerState | None] = {self: None}
 
